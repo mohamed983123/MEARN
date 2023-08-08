@@ -1,0 +1,16 @@
+FROM node:18-alpine AS build
+RUN mkdir MEARN
+ADD  MEARN MEARN/
+WORKDIR MEARN/client/
+RUN ls -l .
+RUN npm install
+RUN ls -la .
+RUN node_modules/.bin/ng build 
+RUN ls -la .
+# Serve Application using Nginx Server
+
+FROM nginx:alpine
+
+COPY --from=build MEARN/client/dist/client/ /usr/share/nginx/html
+
+EXPOSE 80
